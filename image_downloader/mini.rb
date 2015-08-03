@@ -1,5 +1,6 @@
 #!/usr/env  ruby
 
+require 'rubygems'
 require 'mechanize'
 require 'colorize'
 
@@ -61,16 +62,21 @@ module Mini
   end
 
   class Crawler
-    attr_reader :m, :link
+    attr_reader :m, :link, :pages
 
     def initialize
+      @id = ARGV[2] || 48066
       @m = Mechanize.new { |agent| agent.follow_meta_refresh = true }
-      @link = 'http://browse.minitokyo.net/gallery?tid=48066&index=3'
+      @link = "http://browse.minitokyo.net/gallery?tid=#{@id}&index=3"
+      @pages = 1
     end
 
     def run
       login
-      Page.new(m, link).run
+      gather_pages
+      (1..pages).each do |page|
+        Page.new(m, link<<"&page=#{page}").run
+      end
     end
 
     def login
@@ -79,6 +85,13 @@ module Mini
         form.username = ARGV[0]
         form.password = ARGV[1]
       end.submit
+     end
+    end
+
+    def gather_pages
+     m.get(link) do |page|
+       pag_text = page.search(".pagination span").first.text
+       @pages = pag_text.scan(/\d/).map(&:to_i).max
      end
     end
 
