@@ -55,7 +55,7 @@ module Mini
 
     def save_to_file
       downlinks.each do |link|
-        m.get(link[:source]).save "./#{link[:name]}"
+        m.get(link[:source]).save "./#{ARGV[2]}/#{link[:name]}"
         print "|".green
       end
     end
@@ -65,7 +65,7 @@ module Mini
     attr_reader :m, :link, :pages
 
     def initialize
-      @id = ARGV[2] || 48066
+      @id = ARGV[3]
       @m = Mechanize.new { |agent| agent.follow_meta_refresh = true }
       @link = "http://browse.minitokyo.net/gallery?tid=#{@id}&index=3"
       @pages = 1
@@ -73,10 +73,8 @@ module Mini
 
     def run
       login
-      gather_pages
-      (1..pages).each do |page|
-        Page.new(m, link<<"&page=#{page}").run
-      end
+      gather_num_of_pages
+      (1..pages).each { |page| Page.new(m, link<<"&page=#{page}").run }
     end
 
     def login
@@ -88,7 +86,7 @@ module Mini
      end
     end
 
-    def gather_pages
+    def gather_num_of_pages
      m.get(link) do |page|
        pag_text = page.search(".pagination span").first.text
        @pages = pag_text.scan(/\d/).map(&:to_i).max
