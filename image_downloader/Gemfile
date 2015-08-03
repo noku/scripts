@@ -1,7 +1,0 @@
-source 'https://rubygems.org'
-
-#  Automating interaction with websites.
-gem 'mechanize'
-
-# Text color, BG colors for ruby console
-gem 'colorize'

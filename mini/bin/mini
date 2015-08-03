@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require 'gli'
+require 'mini'
+require 'mechanize'
+require 'colorize'
+require 'highline/import'
+require_relative './parser'
+
+include GLI::App
+
+program_desc 'Simple image downloader from mini image galleries'
+
+version Mini::VERSION
+
+subcommand_option_handling :normal
+arguments :strict
+
+desc 'Main command that will download necessary images'
+arg_name 'ID of the gallery'
+command :download do |c|
+  # c.desc 'Describe a switch to download'
+  # c.switch :s
+
+  # c.desc 'Describe a flag to download'
+  # c.default_value 'default'
+  # c.flag :f
+  c.action do |global_options,options,args|
+    id = args.shift
+    params = {
+      id: id,
+      username: $username,
+      password: $password,
+      folder_name: $folder_name
+    }
+
+    Mini::Crawler.new(params).run
+  end
+end
+
+pre do |global,command,options,args|
+  $username = ask("Enter your username:  ")
+  $password = ask("Enter your password:  ") { |q| q.echo = 'x'.red }
+  $folder_name = ask("Enter your Folder Name:  ") { |q| q.default = 'images' }
+
+  true
+end
+
+post do |global,command,options,args|
+  # Post logic here
+  # Use skips_post before a command to skip this
+  # block on that command only
+end
+
+on_error do |exception|
+  true
+end
+
+exit run(ARGV)
