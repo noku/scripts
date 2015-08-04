@@ -1,0 +1,3 @@
+- Series [Series](https://www.codewars.com/kata/series)
+- Gigasecond [Gigasecond](https://www.codewars.com/kata/gigasecond)
+- Substituting Variables Into Strings: Class Template [Substituting Variables Into Strings: Class Template](https://www.codewars.com/kata/substituting-variables-into-strings-class-template)
