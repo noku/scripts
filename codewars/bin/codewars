@@ -6,6 +6,8 @@ require 'fileutils.rb'
 require 'curb'
 require 'json'
 require 'html2markdown'
+require 'colorize'
+require 'highline/import'
 require_relative './parser'
 
 include GLI::App
@@ -20,9 +22,8 @@ arguments :strict
 desc 'Run the command to build the repository'
 arg_name 'API Key For codewars'
 command :run do |c|
-    c.action do |global_options,options,args|
-
-    puts "run command ran"
+  c.action do |global_options,options,args|
+    Codewars::Parser.new.distributed_save
   end
 end
 

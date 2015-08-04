@@ -21,8 +21,11 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('aruba')
   s.add_runtime_dependency('gli','2.13.1')
   s.add_runtime_dependency('nokogiri')
+  s.add_runtime_dependency('curb')
   s.add_runtime_dependency('fileutils')
   s.add_runtime_dependency('rmagick')
   s.add_runtime_dependency('json')
   s.add_runtime_dependency('html2markdown')
+  s.add_runtime_dependency('colorize')
+  s.add_runtime_dependency('highline')
 end

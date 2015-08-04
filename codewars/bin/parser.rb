@@ -1,6 +1,6 @@
 module Codewars
   PATH = './generated'
-  SOURCE = 'user_source.html'
+  SOURCE = './bin/user_source.html'
 
   class Parser
     attr_reader :generator
@@ -27,6 +27,8 @@ module Codewars
 
     def request_kata_by(id)
       http = Curl.get("https://www.codewars.com/api/v1/code-challenges/#{id}")
+      print '|'.blue
+      sleep 1
       JSON.parse(http.body_str)
     end
 
@@ -48,19 +50,21 @@ module Codewars
 
     def save_readmes
       katas.group_by { |res| res['rank']['name'] }.each do |rank, kata|
-        save_to_file(read_path(rank), MarkdownGen.one_line_content_for(kata))
+        save_to_file(readme_path(rank), MarkdownGen.one_line_content_for(kata))
+        print '|'.red
       end
     end
 
     def save_nested
       katas.each do |kata|
         save_to_file(nested_path(kata), MarkdownGen.contents_for(kata))
+        print '|'.green
       end
     end
 
     private
 
-    def readme_path(kata)
+    def readme_path(rank)
       "#{PATH}/#{rank}/README.md"
     end
 
